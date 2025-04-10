@@ -12,6 +12,7 @@
   languages.php = {
     enable = true;
     version = "8.4";
+    extensions = ["imagick"];
     fpm.pools.web.settings = {
       "clear_env" = "no";
       "pm" = "dynamic";
@@ -20,6 +21,13 @@
       "pm.min_spare_servers" = 1;
       "pm.max_spare_servers" = 10;
     };
+    ini = ''
+      memory_limit=128M
+      max_execution_time=120
+      post_max_size=16M
+      upload_max_filesize=16M
+    '';
+
   };
 
   # https://devenv.sh/processes/
