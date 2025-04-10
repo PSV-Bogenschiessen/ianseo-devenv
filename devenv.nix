@@ -60,8 +60,11 @@
   '';
 
   enterShell = ''
-    hello
-    git --version
+    if [[ ! -d Ianseo ]]; then
+      ${pkgs.wget}/bin/wget https://ianseo.net/Release/Ianseo_20250210.zip
+      ${pkgs.unzip}/bin/unzip Ianseo_20250210.zip -d Ianseo
+      rm Ianseo_20250210.zip
+    fi
   '';
 
   # https://devenv.sh/tasks/
