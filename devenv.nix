@@ -5,7 +5,13 @@
   env.GREET = "devenv";
 
   # https://devenv.sh/packages/
-  packages = [ pkgs.git ];
+  packages = [
+    pkgs.git
+    (pkgs.python3.withPackages (ps: [
+      ps.playwright
+      ps.pytest-playwright
+    ]))
+  ];
 
   # https://devenv.sh/languages/
   # languages.rust.enable = true;
@@ -65,6 +71,8 @@
       ${pkgs.unzip}/bin/unzip Ianseo_20250210.zip -d Ianseo
       rm Ianseo_20250210.zip
     fi
+
+    playwright install
   '';
 
   # https://devenv.sh/tasks/
