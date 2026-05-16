@@ -5,6 +5,8 @@ from pathlib import Path
 
 from playwright.sync_api import Playwright, TimeoutError, sync_playwright
 
+from tournament import TOURNAMENT_CODE
+
 
 def load_classes(path: Path) -> list[dict]:
     with path.expanduser().open(encoding="utf-8") as file:
@@ -85,8 +87,10 @@ def run(playwright: Playwright, classes: list[dict]) -> None:
         context = browser.new_context()
         page = context.new_page()
         page.goto("http://localhost:8000/")
-        page.get_by_role("cell", name="jubi26", exact=True).click()
-        page.get_by_role("row", name=re.compile("Öffnen jubi26")).get_by_role("link").click()
+        page.get_by_role("cell", name=TOURNAMENT_CODE, exact=True).click()
+        page.get_by_role(
+            "row", name=re.compile(f"Öffnen {re.escape(TOURNAMENT_CODE)}")
+        ).get_by_role("link").click()
         page.get_by_role("link", name="Turnier", exact=True).click()
         page.get_by_role("link", name="Turnierdaten ändern").click()
         page.get_by_role("link", name="Entfernungen").click()

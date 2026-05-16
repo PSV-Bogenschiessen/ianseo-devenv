@@ -1,0 +1,1 @@
+TOURNAMENT_CODE = "jubi26"
