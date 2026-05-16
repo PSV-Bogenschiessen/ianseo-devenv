@@ -61,7 +61,7 @@ def add_class(page, class_data: dict, view_order: int) -> dict:
         "New_ClAgeTo": "100", # no upgrade classes supported str(class_data["age_end"]),
         "New_ClValidClass": ianseo_name,
         "New_ClSex": class_sex(ianseo_name),
-        "New_ClValidDivision": "",
+        "New_ClValidDivision": str(class_data["ianseo_valid_divisions"]),
     }
 
     return page.evaluate(
@@ -91,22 +91,29 @@ def run(playwright: Playwright, classes: list[dict]) -> None:
         page.get_by_role("link", name="Bogenklassen und Altersklassen").click()
 
         errors = []
-        seen_class_codes = set()
-        view_order = 1
+        class_codes = {}
         for class_data in classes:
             ianseo_name = str(class_data["ianseo_name"])
-            if ianseo_name in seen_class_codes:
-                print(
-                    "Skipped duplicate "
-                    f"{class_data['ianseo_division']} / {ianseo_name} "
-                    f"({class_data['name']})"
-                )
+            ianseo_division = str(class_data["ianseo_division"])
+
+            if ianseo_name not in class_codes:
+                class_codes[ianseo_name] = {
+                    **class_data,
+                    "ianseo_valid_divisions": [ianseo_division],
+                }
                 continue
 
+            if ianseo_division not in class_codes[ianseo_name]["ianseo_valid_divisions"]:
+                class_codes[ianseo_name]["ianseo_valid_divisions"].append(ianseo_division)
+
+        view_order = 1
+        for class_data in class_codes.values():
+            valid_divisions = ",".join(class_data["ianseo_valid_divisions"])
+            class_data["ianseo_valid_divisions"] = valid_divisions
+            ianseo_name = str(class_data["ianseo_name"])
             result = add_class(page, class_data, view_order)
-            seen_class_codes.add(ianseo_name)
             label = (
-                f"{class_data['ianseo_division']} / {ianseo_name} "
+                f"{valid_divisions} / {ianseo_name} "
                 f"({class_description(class_data)})"
             )
             if result.get("error"):
