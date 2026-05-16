@@ -26,7 +26,7 @@ def load_target_faces(path: Path) -> list[dict]:
             raise ValueError(f"Class entry {index} has no target_faces.")
 
         target_face = class_data["target_faces"][0]
-        required_fields = {"name", "size"}
+        required_fields = {"id", "name", "size"}
         missing_fields = required_fields - target_face.keys()
         if missing_fields:
             fields = ", ".join(sorted(missing_fields))
@@ -34,7 +34,7 @@ def load_target_faces(path: Path) -> list[dict]:
 
         target_faces[target_face["name"]] = target_face
 
-    return list(target_faces.values())
+    return sorted(target_faces.values(), key=lambda target_face: int(target_face["id"]))
 
 
 def delete_all_target_faces(page) -> None:
