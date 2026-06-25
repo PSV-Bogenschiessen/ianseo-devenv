@@ -7,6 +7,7 @@
   # https://devenv.sh/packages/
   packages = [
     pkgs.git
+    pkgs.mariadb
     (pkgs.python3.withPackages (ps: [
       ps.playwright
       ps.pytest-playwright
