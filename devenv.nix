@@ -62,8 +62,17 @@
   };
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
+  scripts.fix-german-club-translation.exec = ''
+    language_file="Ianseo/Common/Languages/de/Common.php"
+
+    if [[ ! -f "$language_file" ]]; then
+      echo "Could not find $language_file"
+      echo "Run 'devenv shell' first to download Ianseo, then try again."
+      exit 1
+    fi
+
+    ${pkgs.gnused}/bin/sed -i 's/Land/Verein/g' "$language_file"
+    echo "Updated German translation in $language_file: Land -> Verein"
   '';
 
   enterShell = ''
@@ -74,6 +83,8 @@
     fi
 
     playwright install
+
+    fix-german-club-translation
   '';
 
   # https://devenv.sh/tasks/
