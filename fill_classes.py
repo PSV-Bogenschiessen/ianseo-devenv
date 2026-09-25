@@ -88,7 +88,7 @@ def run(playwright: Playwright, classes: list[dict]) -> None:
         ).get_by_role("link").click()
         page.get_by_role("link", name="Turnier", exact=True).click()
         page.get_by_role("link", name="Turnierdaten ändern").click()
-        page.get_by_role("link", name="Bogenklassen und Altersklassen").click()
+        page.get_by_role("link", name="Bogenarten und Altersklassen").click()
 
         errors = []
         class_codes = {}
